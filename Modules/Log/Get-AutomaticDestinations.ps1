@@ -41,8 +41,8 @@ if (Test-Path ($JLECmdParserPath)) {
 
     #Grab The Automatic Destinations.
     try {
-        if (Test-Path "$JLECmdParserOutputPath\*.csv") {
-            Import-Csv -Delimiter "`t" "$JLECmdParserOutputPath\*.csv"
+        if (Test-Path "$JLECmdParserOutputPath\*_AutomaticDestinations.csv") {
+            Import-Csv -Delimiter "`t" "$JLECmdParserOutputPath\*_AutomaticDestinations.csv"
         }
         else { 
             Write-Error "Unable to locate output file." 
