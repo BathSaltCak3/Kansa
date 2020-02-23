@@ -30,10 +30,20 @@ catch {
 #Find and execute AppCompatCacheParser.exe
 if (Test-Path ($AppCompatCacheParserPath)) {
     #Run AppCompatCacheParser.exe
-    $suppress = & $AppCompatCacheParserPath --csv $AppCompatCacheParserOutputPath
-
+    try {
+        $suppress = & $AppCompatCacheParserPath --csv $AppCompatCacheParserOutputPath
+    }
+    catch { 
+        Write-Error "Unable to Execute. Error: $_"
+    }
+    
     #Output the data.
-    Import-Csv -Delimiter "`t" "$AppCompatCacheParserOutputPath\*.tsv"        
+    try {
+        Import-Csv -Delimiter "`t" "$AppCompatCacheParserOutputPath\*.csv"
+    }
+    catch {
+        Write-Error "Unable to Import the CSV. Error: $_"
+    }        
 }
 else {
     Write-Error "AppCompatCacheParser.exe not found on $env:COMPUTERNAME"
