@@ -15,7 +15,8 @@ $RBCmdParserOutputPath = $($env:Temp + "\RBCmd-$($Runtime)")
 #create the output folder
 try {
     $suppress = New-Item -Name "RBCmd-$($Runtime)" -ItemType Directory -Path $env:Temp -Force
-} catch {
+}
+catch {
     Write-Error "Unable to create the output folder. Error: $_"
 }
 
@@ -23,18 +24,21 @@ try {
 if (Test-Path ($RBCmdPath)) {
     #Run RBCmd.exe
     try {
-    $suppress = & $RBCmdPath --csv $RBCmdParserOutputPath -d 'c:\'
-    } catch { 
+        $suppress = & $RBCmdPath --csv $RBCmdParserOutputPath -d 'c:\'
+    }
+    catch { 
         Write-Error "Unable to Execute. Error: $_"
     }
     
     #Output the data.
     try {
         Import-Csv -Delimiter "`t" "$RBCmdParserOutputPath\*.csv"  
-    }catch{
+    }
+    catch {
         Write-Error "Unable to Import the CSV. Error: $_"
     }
-} else {
+}
+else {
     Write-Error "RBCmd.exe not found on $env:COMPUTERNAME"
 }
 
@@ -43,6 +47,7 @@ try {
     if (Test-path ($RBCmdParserOutputPath)) {
         $suppress = Remove-Item $RBCmdParserOutputPath -Force -Recurse
     } 
-} catch {
+}
+catch {
     Write-Error "Failed to remove Output folder: $RBCmdParserOutputPath."
 }
