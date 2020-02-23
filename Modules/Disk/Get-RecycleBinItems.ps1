@@ -32,7 +32,12 @@ if (Test-Path ($RBCmdPath)) {
     
     #Output the data.
     try {
-        Import-Csv -Delimiter "`t" "$RBCmdParserOutputPath\*.csv"  
+        if (Test-Path "$RBCmdParserOutputPath\*.csv") {
+            Import-Csv -Delimiter "`t" "$RBCmdParserOutputPath\*.csv"  
+        }
+        else { 
+            Write-Error "Unable to locate output file." 
+        }
     }
     catch {
         Write-Error "Unable to Import the CSV. Error: $_"
