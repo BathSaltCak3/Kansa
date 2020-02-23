@@ -13,7 +13,7 @@ $Runtime = ([String] (Get-Date -Format yyyyMMddHHmmss))
 $suppress = New-Item -Name "RBCmd-$($Runtime)" -ItemType Directory -Path $env:Temp -Force
 $RBCmdParserOutputPath = $($env:Temp + "\RBCmd-$($Runtime)")
 
-if (Test-Path ($AppCompatCacheParserPath)) {
+if (Test-Path ($RBCmdPath)) {
     #Run AppCompatCacheParser.exe
     $suppress = & $RBCmdPath --csv $RBCmdParserOutputPath
 
