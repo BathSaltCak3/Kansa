@@ -22,7 +22,8 @@ $AppCompatCacheParserOutputPath = $($env:Temp + "\ACCP-$($Runtime)")
 #Create the output folder
 try {
     $suppress = New-Item -Name "ACCP-$($Runtime)" -ItemType Directory -Path $env:Temp -Force
-} catch {
+}
+catch {
     Write-Error "Unable to create the output folder. Error: $_"
 }
 
@@ -33,7 +34,8 @@ if (Test-Path ($AppCompatCacheParserPath)) {
 
     #Output the data.
     Import-Csv -Delimiter "`t" "$AppCompatCacheParserOutputPath\*.tsv"        
-} else {
+}
+else {
     Write-Error "AppCompatCacheParser.exe not found on $env:COMPUTERNAME"
 }
 
@@ -41,6 +43,7 @@ try {
     if (Test-path ($AppCompatCacheParserOutputPath)) {
         $suppress = Remove-Item $AppCompatCacheParserOutputPath -Force -Recurse
     } 
-}catch {
+}
+catch {
     Write-Error "Failed to remove Output folder: $AppCompatCacheParserOutputPath."
 }
