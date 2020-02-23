@@ -14,7 +14,6 @@ OUTPUT CSV
 BINDEP .\Modules\bin\AppCompatCacheParser.exe
 #>
 
-
 #Setup Variables
 $AppCompatCacheParserPath = ($env:SystemRoot + "\AppCompatCacheParser.exe")
 $Runtime = ([String] (Get-Date -Format yyyyMMddHHmmss))
