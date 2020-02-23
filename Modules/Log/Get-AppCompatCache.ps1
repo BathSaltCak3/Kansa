@@ -36,10 +36,15 @@ if (Test-Path ($AppCompatCacheParserPath)) {
     catch { 
         Write-Error "Unable to Execute. Error: $_"
     }
-    
+
     #Output the data.
     try {
-        Import-Csv -Delimiter "`t" "$AppCompatCacheParserOutputPath\*.csv"
+        if (Test-Path "$AppCompatCacheParserOutputPath\*.csv") {
+            Import-Csv -Delimiter "`t" "$AppCompatCacheParserOutputPath\*.csv"
+        }
+        else { 
+            Write-Error "Unable to locate output file." 
+        }
     }
     catch {
         Write-Error "Unable to Import the CSV. Error: $_"
