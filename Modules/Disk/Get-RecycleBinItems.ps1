@@ -10,19 +10,39 @@ BINDEP .\Modules\bin\RBCmd.exe
 #Setup Variables
 $RBCmdPath = ($env:SystemRoot + "\RBCmd.exe")
 $Runtime = ([String] (Get-Date -Format yyyyMMddHHmmss))
-$suppress = New-Item -Name "RBCmd-$($Runtime)" -ItemType Directory -Path $env:Temp -Force
 $RBCmdParserOutputPath = $($env:Temp + "\RBCmd-$($Runtime)")
 
-if (Test-Path ($RBCmdPath)) {
-    #Run AppCompatCacheParser.exe
-    $suppress = & $RBCmdPath --csv $RBCmdParserOutputPath
+#create the output folder
+try {
+    $suppress = New-Item -Name "RBCmd-$($Runtime)" -ItemType Directory -Path $env:Temp -Force
+} catch {
+    Write-Error "Unable to create the output folder. Error: $_"
+}
 
-    #Output the data.
-    Import-Csv -Delimiter "`t" "$RBCmdParserOutputPath\*.tsv"
+#Find and Execute RBCmd.exe
+if (Test-Path ($RBCmdPath)) {
+    #Run RBCmd.exe
+    try {
+    $suppress = & $RBCmdPath --csv $RBCmdParserOutputPath -d 'c:\'
+    } catch { 
+        Write-Error "Unable to Execute. Error: $_"
+    }
     
-    #Delete the output folder.
-    $suppress = Remove-Item $RBCmdParserOutputPath -Force -Recurse
-        
+    #Output the data.
+    try {
+        Import-Csv -Delimiter "`t" "$RBCmdParserOutputPath\*.csv"  
+    }catch{
+        Write-Error "Unable to Import the CSV. Error: $_"
+    }
 } else {
     Write-Error "RBCmd.exe not found on $env:COMPUTERNAME"
+}
+
+#Remove the folder we created.
+try {
+    if (Test-path ($RBCmdParserOutputPath)) {
+        $suppress = Remove-Item $RBCmdParserOutputPath -Force -Recurse
+    } 
+} catch {
+    Write-Error "Failed to remove Output folder: $RBCmdParserOutputPath."
 }
